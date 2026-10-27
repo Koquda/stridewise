@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Stridewise · Recovery, in perspective</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Stridewise"
+        ><span class="mark">s</span>stridewise</a
+      >
+      <div class="workspace">
+        <span class="workspace-icon">◈</span>
+        <div>Research workspace<small>Local environment</small></div>
+        <span class="workspace-dot"></span>
+      </div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav aria-label="Main navigation">
+        <button class="nav active" data-page="estimate">
+          <span>◴</span> Recovery estimate</button
+        ><button class="nav" data-page="evidence">
+          <span>▥</span> Model evidence</button
+        ><button class="nav" data-page="data">
+          <span>▦</span> Data & methodology
+        </button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="mini-orbit">↗</div>
+        <h3>A clearer view of<br />what comes next.</h3>
+        <p>Explore an outcome.<br />Understand its uncertainty.</p>
+        <div class="local"><span></span> Runs on your device</div>
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <div class="breadcrumb">
+          Workspace <span>/</span> <strong id="crumb">Recovery estimate</strong>
+        </div>
+        <div class="header-right">
+          <span class="status-dot"></span> Research prototype
+          <button id="theme" aria-label="Toggle color theme">◐</button>
+        </div>
+      </header>
+      <main id="main">
+        <section id="estimate" class="page">
+          <div class="title-row">
+            <div>
+              <p class="eyebrow">A LITTLE MORE PERSPECTIVE</p>
+              <h1>Recovery, in perspective.</h1>
+              <p class="intro">
+                A week-12 mobility estimate, with room for the unknown.
+              </p>
+            </div>
+            <span class="badge provenance">Synthetic demo</span>
+          </div>
+          <div class="notice">
+            <span class="notice-icon">i</span>
+            <p id="notice-text">
+              An exploration, not a clinical forecast. This demo learns from
+              simulated outcomes. Do not use it to guide care.
+            </p>
+            <button class="text-button" data-goto="data">
+              About the data ↗
+            </button>
+          </div>
+          <div class="estimate-grid">
+            <section class="card profile-card">
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">01 / THE STARTING POINT</p>
+                  <h2>Baseline profile</h2>
+                </div>
+                <span class="muted-icon">⤢</span>
+              </div>
+              <p class="card-description">
+                Use measurements available at the baseline visit.
+              </p>
+              <form id="profile">
+                <label for="age">Age <span>years</span></label
+                ><input
+                  id="age"
+                  name="age"
+                  type="number"
+                  value="58"
+                  min="18"
+                  max="90"
+                  step="0.1"
+                  required
+                />
+                <div class="slider-label">
+                  <label for="mobility">Mobility index</label
+                  ><output id="mobility-value" for="mobility"
+                    >42 <small>/ 100</small></output
+                  >
+                </div>
+                <input
+                  id="mobility"
+                  name="mobility"
+                  type="range"
+                  min="10"
+                  max="85"
+                  value="42"
+                  step="0.1"
+                />
+                <div class="range-label">
+                  <span>More limited</span><span>More mobile</span>
+                </div>
+                <div class="slider-label">
+                  <label for="pain">Pain score</label
+                  ><output id="pain-value" for="pain"
+                    >4 <small>/ 10</small></output
+                  >
+                </div>
+                <input
+                  id="pain"
+                  name="pain"
+                  type="range"
+                  min="0.1"
+                  max="9.9"
+                  step="0.1"
+                  value="4"
+                />
+                <div class="range-label">
+                  <span>No pain</span><span>Severe pain</span>
+                </div>
+                <label for="weeks">Time since event <span>weeks</span></label
+                ><input
+                  id="weeks"
+                  name="weeks"
+                  type="number"
+                  min="0.1"
+                  max="5.9"
+                  step="0.1"
+                  value="1"
+                  required
+                />
+                <div class="field-note">
+                  Baseline must be within the first 6 weeks.
+                </div>
+                <button class="primary" type="submit">
+                  Estimate week-12 mobility <span>↗</span>
+                </button>
+                <p class="privacy"><span>♧</span> Your inputs are not saved.</p>
+                <p id="error" class="error" role="alert"></p>
+              </form>
+            </section>
+            <section class="card outcome-card" aria-labelledby="outcome-title">
+              <div class="card-heading">
+                <div>
+                  <p class="eyebrow">02 / THE POSSIBLE OUTCOME</p>
+                  <h2 id="outcome-title">At the 12-week mark</h2>
+                </div>
+                <span class="pill">One outcome</span>
+              </div>
+              <p id="result-empty" class="card-description">
+                Enter a baseline profile to see a week-12 estimate.
+              </p>
+              <div id="result" aria-live="polite" aria-atomic="true" hidden>
+                <div class="score-line">
+                  <strong id="score">—</strong
+                  ><span>/ 100<small>estimated mobility index</small></span>
+                </div>
+                <div class="change">
+                  <span>↗</span><strong id="change">—</strong> points from
+                  baseline
+                </div>
+                <div class="chart">
+                  <svg
+                    viewBox="0 0 620 180"
+                    role="img"
+                    aria-labelledby="chart-title chart-desc"
+                  >
+                    <title id="chart-title">
+                      Baseline and week-12 mobility
+                    </title>
+                    <desc id="chart-desc">
+                      A baseline point and a week-12 prediction interval. The
+                      space between visits does not represent a predicted
+                      trajectory.
+                    </desc>
+                    <defs>
+                      <linearGradient id="band" x1="0" x2="1">
+                        <stop stop-color="#c2d8bd" />
+                        <stop offset="1" stop-color="#d9e7d4" />
+                      </linearGradient>
+                    </defs>
+                    <g class="grid-lines">
+                      <path d="M45 25H590M45 85H590M45 145H590" />
+                    </g>
+                    <g class="axis-text">
+                      <text x="8" y="29">100</text>
+                      <text x="16" y="89">50</text>
+                      <text x="23" y="149">0</text>
+                    </g>
+                    <line
+                      x1="135"
+                      y1="25"
+                      x2="135"
+                      y2="145"
+                      class="visit-line"
+                    />
+                    <line
+                      x1="470"
+                      y1="25"
+                      x2="470"
+                      y2="145"
+                      class="visit-line"
+                    />
+                    <circle
+                      id="baseline-dot"
+                      cx="135"
+                      cy="94"
+                      r="6"
+                      fill="#8d9689"
+                    />
+                    <rect
+                      id="interval-band"
+                      x="433"
+                      y="65"
+                      width="74"
+                      height="40"
+                      rx="18"
+                      fill="url(#band)"
+                    />
+                    <line
+                      id="interval-line"
+                      x1="470"
+                      y1="65"
+                      x2="470"
+                      y2="105"
+                      stroke="#4a6d44"
+                      stroke-width="2"
+                    />
+                    <circle
+                      id="estimate-dot"
+                      cx="470"
+                      cy="85"
+                      r="7"
+                      fill="#486d41"
+                      stroke="white"
+                      stroke-width="3"
+                    />
+                    <g class="axis-text">
+                      <text x="109" y="174">Baseline</text>
+                      <text x="447" y="174">Week 12</text>
+                    </g>
+                  </svg>
+                  <div class="chart-caption">
+                    <span><i class="legend-dot"></i> Observed baseline</span
+                    ><span
+                      ><i class="legend-band"></i> Prediction interval</span
+                    >
+                  </div>
+                </div>
+                <div class="interval-box">
+                  <div>
+                    <span id="interval-label">90% prediction interval</span
+                    ><strong id="interval">—</strong>
+                  </div>
+                  <fieldset class="segments">
+                    <legend class="sr-only">
+                      Prediction interval coverage
+                    </legend>
+                    <label
+                      ><input
+                        type="radio"
+                        name="coverage"
+                        value="80"
+                      />80%</label
+                    ><label
+                      ><input
+                        type="radio"
+                        name="coverage"
+                        value="90"
+                        checked
+                      />90%</label
+                    ><label
+                      ><input
+                        type="radio"
+                        name="coverage"
+                        value="95"
+                      />95%</label
+                    >
+                  </fieldset>
+                </div>
+                <p class="interval-explanation" id="interval-explanation">
+                  The interval describes uncertainty across similar cases. It is
+                  not a guarantee for one person.
+                </p>
+              </div>
+              <div class="result-footer">
+                <span>↳</span>
+                <p>
+                  Recovery varies. A single follow-up score cannot tell us when
+                  a milestone will happen.
+                </p>
+              </div>
+            </section>
+          </div>
+          <div class="bottom-grid">
+            <article class="small-card">
+              <span class="tile-icon">▦</span>
+              <div>
+                <h3>Grounded in a cohort</h3>
+                <p id="cohort-summary">
+                  1,200 simulated records. Zero real patients.
+                </p>
+              </div>
+              <button data-goto="data" aria-label="View cohort data">↗</button>
+            </article>
+            <article class="small-card">
+              <span class="tile-icon">◎</span>
+              <div>
+                <h3>Uncertainty stays visible</h3>
+                <p>Calibrated on records the model never trained on.</p>
+              </div>
+              <button data-goto="evidence" aria-label="View model evidence">
+                ↗
+              </button>
+            </article>
+          </div>
+        </section>
+        <section id="evidence" class="page" hidden>
+          <p class="eyebrow">CHECK THE ESTIMATE</p>
+          <h1>Evidence before confidence.</h1>
+          <p class="intro">
+            Held-out results for the active dataset, at 90% nominal coverage.
+          </p>
+          <div class="notice">
+            <span class="notice-icon">i</span>
+            <p>
+              These are internal evaluation results. Synthetic performance does
+              not establish clinical validity or performance in another
+              population.
+            </p>
+          </div>
+          <div id="metrics" class="metrics"></div>
+          <div class="card detail-card">
+            <h2>Three separate sets. One fixed outcome.</h2>
+            <div id="splits" class="splits"></div>
+            <p>
+              Training fits a ridge linear regression. Calibration sets the
+              absolute-residual interval width. The untouched test set measures
+              error and empirical coverage. The mean baseline predicts the
+              training-set mean for every test record.
+            </p>
+            <p>
+              Split conformal coverage is marginal under exchangeability. It
+              does not guarantee coverage for an individual or a subgroup. Wider
+              coverage settings produce wider intervals. All scores and bounds
+              are clipped to the defined 0–100 outcome range.
+            </p>
+            <p id="eligibility"></p>
+            <h3>Training ranges</h3>
+            <p>
+              Predictions outside these observed ranges are refused. Being
+              inside each range does not prove a profile is well represented.
+            </p>
+            <div id="ranges"></div>
+            <h3>Important limits</h3>
+            <p>
+              No external validation, subgroup fairness assessment, temporal
+              holdout, missing-data correction, or causal treatment estimates.
+              Random splitting is a demonstration default. Retrospective
+              deployment requires cohort-specific review and temporal or site
+              validation.
+            </p>
+          </div>
+        </section>
+        <section id="data" class="page" hidden>
+          <p class="eyebrow">KNOW WHAT IS UNDERNEATH</p>
+          <h1>A transparent starting point.</h1>
+          <p class="intro">
+            Data, assumptions, and a path to retrospective research.
+          </p>
+          <div class="card detail-card">
+            <span class="badge provenance">Synthetic demo</span>
+            <h2 id="data-title">Simulated outcomes. Explicit limitations.</h2>
+            <p id="data-source"></p>
+            <p>
+              The demonstration mobility index is an illustrative 0–100 scale.
+              It is not a validated clinical instrument. The model predicts the
+              score 12 weeks after the event using baseline age, mobility, pain,
+              and time since event. A real dataset must define one consistent
+              event, index, assessment protocol, and follow-up window.
+            </p>
+            <a class="download" href="/api/example.csv"
+              >Download synthetic example CSV ↓</a
+            >
+            <h3>Bring a retrospective cohort</h3>
+            <p>
+              Start the application with
+              <code>go run . -data /path/to/cohort.csv</code>. Data stays on the
+              server device. No upload service or external requests are used.
+              Use pseudonymous IDs and access-controlled local files.
+            </p>
+            <div class="code-wrap">
+              <code
+                >patient_id,age,baseline_mobility,baseline_pain,weeks_since_event,mobility_week12</code
+              >
+            </div>
+            <p>
+              At least 150 complete records are required, with one unique ID per
+              person. The importer rejects invalid numbers, duplicate IDs, and
+              values outside the accepted bounds. All predictors must be known
+              at baseline. Outcome dates and measurement validity require
+              independent source review.
+            </p>
+            <h3>How uncertainty is calculated</h3>
+            <p>
+              The model sorts absolute errors on the calibration set and uses
+              the finite-sample corrected conformal quantile. The selected
+              interval targets 80%, 90%, or 95% population coverage under
+              exchangeable observations.
+            </p>
+            <a
+              href="https://www.stat.berkeley.edu/~ryantibs/papers/conformal-jasa.pdf"
+              target="_blank"
+              rel="noreferrer"
+              >Read the statistical method ↗</a
+            >
+            <h3>Research only</h3>
+            <p>
+              This software does not recommend care, diagnose conditions, or
+              estimate treatment effects. Real patient use needs consent and
+              governance, validated measurements, external validation, and
+              clinical oversight.
+            </p>
+          </div>
+        </section>
+        <footer>
+          <span>STRIDEWISE / RESEARCH EDITION</span
+          ><span>A thoughtful estimate. An honest range.</span>
+        </footer>
+      </main>
+    </div>
+  </body>
+</html>

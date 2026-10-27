@@ -1,0 +1,11 @@
+ts	phase	decision	why	evidence	result
+2026-10-27T07:32:00Z	frame	Created private Stridewise GitHub repository before implementation	User asked for repository first	https://github.com/Koquda/stridewise	created
+2026-10-27T07:35:00Z	design	Chose Go with embedded frontend and immutable model	User requested Go or Rust; one binary keeps operation simple	docs/ARCHITECTURE.md	implemented
+2026-10-27T07:40:00Z	data	Use labeled synthetic default with local retrospective CSV option	No patient dataset supplied; no invented patient evidence	model.go	implemented
+2026-10-27T07:43:00Z	model	Use separate training calibration and test sets	Intervals and evaluation must not reuse training outcomes	model_test.go	local race tests passed
+2026-10-27T07:46:00Z	verification	Used external linker for installed Go toolchain	macOS loader rejected internal-linker executable	README.md	local execution passed
+2026-10-27T07:49:00Z	review	Hide estimates when inputs change and before first prediction	Independent review found stale and invented chart states	web/app.js	browser verified
+2026-10-27T07:50:00Z	review	Preserve exact training ranges and reject padded IDs	Decimal cohorts and identifier variants exposed boundary gaps	model_test.go	local tests passed
+2026-10-27T07:51:00Z	audit	Added dataset fingerprint and eligible-subset coverage	Input identity and serving refusals must remain visible	main.go	browser verified
+2026-10-27T07:52:00Z	verification	Checked narrow and desktop layouts and dark appearance	Verify the actual interface rather than only compilation	docs/VERIFICATION.md	verified with stated limits
+2026-10-27T07:54:00Z	audit	Hide pending estimates and show unavailable coverage for empty eligible subsets	Final review found two remaining presentation edge cases	web/app.js	fixed
