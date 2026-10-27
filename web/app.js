@@ -1,4 +1,13 @@
 const $ = (id) => document.getElementById(id);
+const numberFormat = new Intl.NumberFormat("en", { maximumFractionDigits: 1 });
+const formatNumber = (value) => numberFormat.format(value === 0 ? 0 : value);
+function showSliderValue(id) {
+  const input = $(id);
+  const limit = id === "pain" ? 10 : 100;
+  const value = formatNumber(Number(input.value));
+  $(id + "-value").textContent = `${value} / ${limit}`;
+  input.setAttribute("aria-valuetext", `${value} out of ${limit}`);
+}
 let model,
   lastProfile,
   requestNumber = 0;
@@ -34,8 +43,7 @@ if (matchMedia("(prefers-color-scheme: dark)").matches)
   document.body.classList.add("dark");
 for (const id of ["mobility", "pain"])
   $(id).addEventListener("input", () => {
-    $(id + "-value").textContent =
-      `${$(id).value} / ${id === "pain" ? 10 : 100}`;
+    showSliderValue(id);
   });
 $("profile").addEventListener("input", () => {
   requestNumber++;
@@ -86,9 +94,17 @@ async function estimate(profile) {
     $("error").textContent = "";
     $("result").hidden = false;
     $("result-empty").hidden = true;
-    $("score").textContent = p.estimate.toFixed(1);
-    $("change").textContent = (p.change >= 0 ? "+" : "") + p.change.toFixed(1);
-    $("interval").textContent = `${p.lower.toFixed(1)} – ${p.upper.toFixed(1)}`;
+    $("score").textContent = formatNumber(p.estimate);
+    const displayedChange =
+      (Math.round(p.estimate * 10) - Math.round(profile.mobility * 10)) / 10;
+    $("change").textContent =
+      (displayedChange > 0 ? "+" : "") + formatNumber(displayedChange);
+    const changeIndicator = document.querySelector(".change");
+    changeIndicator.querySelector("span").textContent =
+      displayedChange > 0 ? "↗" : displayedChange < 0 ? "↘" : "→";
+    changeIndicator.classList.toggle("decline", displayedChange < 0);
+    $("interval").textContent =
+      `${formatNumber(Math.floor(p.lower * 10) / 10)} – ${formatNumber(Math.ceil(p.upper * 10) / 10)}`;
     $("interval-label").textContent = `${p.coverage}% prediction interval`;
     $("interval-explanation").textContent =
       `Targets ${p.coverage}% coverage across exchangeable cases. This is a population-level property, not an individual guarantee.${model.demo ? " Results describe simulated data only." : ""}`;
@@ -102,12 +118,14 @@ async function estimate(profile) {
     $("interval-line").setAttribute("y1", y(p.upper));
     $("interval-line").setAttribute("y2", y(p.lower));
     $("chart-desc").textContent =
-      `Baseline mobility ${profile.mobility}. Week-12 estimate ${p.estimate.toFixed(1)}, with ${coverage}% prediction interval ${p.lower.toFixed(1)} to ${p.upper.toFixed(1)}. No intermediate trajectory is modeled.`;
+      `Baseline mobility ${formatNumber(profile.mobility)}. Week-12 estimate ${formatNumber(p.estimate)}, with ${coverage}% prediction interval ${formatNumber(Math.floor(p.lower * 10) / 10)} to ${formatNumber(Math.ceil(p.upper * 10) / 10)}. No intermediate trajectory is modeled.`;
   } catch (e) {
     if (number === requestNumber) {
       $("error").textContent = e.message;
       $("result").hidden = true;
       $("result-empty").hidden = false;
+      $("result-empty").textContent =
+        "The estimate is unavailable. Review the error and try again.";
     }
   } finally {
     if (number === requestNumber) button.removeAttribute("aria-busy");
@@ -140,10 +158,10 @@ async function init() {
       ? "1,200 simulated records. Zero real patients."
       : `${model.train + model.calibration + model.test} local cohort records. Unverified provenance.`;
     const metrics = [
-      [model.metrics.mae.toFixed(2), "Mean absolute error, points"],
-      [model.metrics.baseline_mae.toFixed(2), "Mean baseline error, points"],
+      [formatNumber(model.metrics.mae), "Mean absolute error, points"],
+      [formatNumber(model.metrics.baseline_mae), "Mean baseline error, points"],
       [model.metrics.coverage.toFixed(1) + "%", "Observed test coverage"],
-      [model.metrics.width.toFixed(1), "Average interval width, points"],
+      [formatNumber(model.metrics.width), "Average interval width, points"],
     ];
     for (const [value, label] of metrics) {
       const div = document.createElement("div");
@@ -171,15 +189,29 @@ async function init() {
       const p = document.createElement("div");
       p.textContent = `${names[i]} · ${r[0].toFixed(2)} to ${r[1].toFixed(2)}`;
       $("ranges").append(p);
-      const low = r[0],
+      const input = $(ids[i]);
+      let low = r[0],
         high = r[1];
-      $(ids[i]).step = "any";
-      $(ids[i]).min = low;
-      $(ids[i]).max = high;
-      $(ids[i]).value = Math.max(low, Math.min(high, +$(ids[i]).value));
-      if (i === 1 || i === 2)
-        $(ids[i] + "-value").textContent =
-          `${$(ids[i]).value} / ${i === 1 ? 100 : 10}`;
+      input.step = "any";
+      if (i === 1 || i === 2) {
+        const firstTenth = Math.ceil(low * 10) / 10;
+        const lastTenth = Math.floor(high * 10) / 10;
+        if (firstTenth <= lastTenth) {
+          low = firstTenth;
+          high = lastTenth;
+          input.step = "0.1";
+        } else {
+          input.type = "number";
+        }
+      }
+      input.min = low;
+      input.max = high;
+      const initial =
+        input.type === "range"
+          ? Math.round(Number(input.value) * 10) / 10
+          : Number(input.value);
+      input.value = Math.max(low, Math.min(high, initial));
+      if (i === 1 || i === 2) showSliderValue(ids[i]);
     });
     page(
       ["estimate", "evidence", "data"].includes(location.hash.slice(1))

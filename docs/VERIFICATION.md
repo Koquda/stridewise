@@ -31,3 +31,9 @@ An independent GPT-6 Astra reviewer checked the model, boundary handling, UI sta
 ## Open validity work
 
 No real patient dataset was supplied. The delivered default is a synthetic demonstration. Real-world accuracy, outcome validity, external calibration, fairness, and suitability for clinical decisions remain unverified. CSV validation cannot prove consent, source measurement timing, or that one ID corresponds to one person.
+
+## Score display follow-up
+
+On 27 October 2026, the running interface reproduced raw decimal slider labels. The fix gives ordinary sliders valid 0.1-point steps and formats displayed scores to at most one decimal. A cohort too narrow to contain a tenth uses exact numeric entry. Internal model values remain unchanged. Displayed interval endpoints round outward.
+
+Browser checks confirmed clean slider labels, valid maximum submissions, a downward indicator for a negative change, and compact evidence metrics. The maximum-profile example produced 73 points against baseline 84.9, with a displayed change of -11.9. A constant imported cohort with baseline 42.05 still submitted, displayed baseline 42.1 and outcome 60, and showed a consistent +17.9 displayed change. The 90% and 95% selectors and stale-result clearing were checked. Local race tests, vet, build, and JavaScript syntax checks passed.

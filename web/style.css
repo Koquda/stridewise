@@ -1044,3 +1044,17 @@ body.dark .notice p,
 body.dark .text-button {
   color: #bdcbb3;
 }
+.change.decline strong,
+.change.decline > span {
+  color: #965b40;
+}
+.change.decline > span {
+  background: #f6eee6;
+}
+body.dark .change.decline strong,
+body.dark .change.decline > span {
+  color: #e3b99e;
+}
+body.dark .change.decline > span {
+  background: #493a2e;
+}

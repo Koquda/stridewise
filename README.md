@@ -78,3 +78,5 @@ Tests cover prediction response, interval ordering, conformal rank, reproducibil
 The interface uses system typography, restrained green materials, keyboard focus, an accessible interval chart, light and dark themes, responsive layouts, and reduced-motion and contrast preferences. See [the build plan](docs/PLAN.md), [architecture decision](docs/ARCHITECTURE.md), and [verification record](docs/VERIFICATION.md).
 
 The model API exposes a SHA-256 fingerprint of the parsed, ordered input records. Preserve the source CSV and the model version to reproduce a run. The evidence page reports how many held-out profiles would be refused by serving ranges and their eligible-subset coverage. Main metrics include all test records.
+
+Scores in the interface use at most one decimal. Ordinary mobility and pain sliders use 0.1-point steps inside the cohort range. Cohorts with narrower ranges use exact numeric entry. Prediction interval endpoints round outward for display. The displayed change is the difference between the displayed endpoint and baseline, so visible arithmetic stays consistent. API predictions retain full precision.
